@@ -1,0 +1,32 @@
+# Environment
+.env
+.env.local
+*.pyc
+__pycache__/
+.venv/
+venv/
+env/
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+*.log
+npm-debug.log*
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+*.swo
+
+# Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Misc
+*.bak

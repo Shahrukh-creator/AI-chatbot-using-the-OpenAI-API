@@ -1,0 +1,53 @@
+<section class="chat">
+  <header class="chat__header">
+    <div>
+      <p class="chat__brand">NovaChat</p>
+      <h1>Talk with your AI assistant</h1>
+      <p class="chat__subtitle">Angular front end · Python FastAPI · OpenAI</p>
+    </div>
+  </header>
+
+  <div class="chat__messages" #messageList>
+    @if (messages.length === 0 && !loading) {
+      <div class="chat__empty">
+        <p>Ask anything to get started.</p>
+      </div>
+    }
+
+    @for (message of messages; track $index) {
+      <article
+        class="bubble"
+        [class.bubble--user]="message.role === 'user'"
+        [class.bubble--assistant]="message.role === 'assistant'"
+      >
+        <span class="bubble__role">{{ message.role === 'user' ? 'You' : 'Assistant' }}</span>
+        <p>{{ message.content }}</p>
+      </article>
+    }
+
+    @if (loading) {
+      <article class="bubble bubble--assistant bubble--loading">
+        <span class="bubble__role">Assistant</span>
+        <p>Thinking…</p>
+      </article>
+    }
+  </div>
+
+  @if (error) {
+    <p class="chat__error" role="alert">{{ error }}</p>
+  }
+
+  <form class="chat__composer" (ngSubmit)="send()">
+    <label class="sr-only" for="message">Message</label>
+    <textarea
+      id="message"
+      name="message"
+      rows="2"
+      placeholder="Type a message…"
+      [(ngModel)]="draft"
+      (keydown)="onKeydown($event)"
+      [disabled]="loading"
+    ></textarea>
+    <button type="submit" [disabled]="loading || !draft.trim()">Send</button>
+  </form>
+</section>
