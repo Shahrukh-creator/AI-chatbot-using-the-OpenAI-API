@@ -6,6 +6,10 @@ from app.routers import chat
 
 settings = get_settings()
 
+print("API Key Loaded:", bool(settings.openai_api_key))
+print("API Key Prefix:", settings.openai_api_key[:10] if settings.openai_api_key else "Not Found")
+print("Model:", settings.openai_model)
+
 app = FastAPI(
     title="AI Chatbot API",
     description="Python FastAPI backend for an Angular chatbot using OpenAI",

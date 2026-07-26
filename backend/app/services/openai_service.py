@@ -8,6 +8,9 @@ class OpenAIService:
 
     def __init__(self, settings: Settings):
 
+        if not settings.openai_api_key:
+            raise ValueError("OPENAI_API_KEY is missing.")
+
         self.client = OpenAI(
             api_key=settings.openai_api_key
         )
@@ -18,7 +21,7 @@ class OpenAIService:
         self,
         message: str,
         history: list[ChatMessage]
-    ):
+    ) -> tuple[str, str]:
 
         messages = [
             {
@@ -27,21 +30,28 @@ class OpenAIService:
             }
         ]
 
+        # Previous conversation
         for item in history:
+            messages.append(
+                {
+                    "role": item.role,
+                    "content": item.content
+                }
+            )
 
-            messages.append({
-                "role": item.role,
-                "content": item.content
-            })
-
-        messages.append({
-            "role": "user",
-            "content": message
-        })
+        # Current user message
+        messages.append(
+            {
+                "role": "user",
+                "content": message
+            }
+        )
 
         response = self.client.responses.create(
             model=self.model,
             input=messages
         )
 
-        return response.output_text, self.model
+        reply = response.output_text or ""
+
+        return reply, self.model
