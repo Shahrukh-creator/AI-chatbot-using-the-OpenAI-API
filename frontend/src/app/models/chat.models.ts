@@ -5,5 +5,6 @@ export interface ChatMessage {
 
 export interface ChatResponse {
   reply: string;
+  answer: string
   model: string;
 }

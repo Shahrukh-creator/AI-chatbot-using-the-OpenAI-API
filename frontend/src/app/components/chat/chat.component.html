@@ -7,6 +7,25 @@
     </div>
   </header>
 
+  <!-- <div class="chat__upload">
+
+    <input
+      type="file"
+      accept=".pdf"
+      (change)="onFileSelected($event)"
+    />
+  
+    <button
+      type="button"
+      (click)="uploadPdf()"
+      [disabled]="!selectedFile || uploading">
+  
+      {{ uploading ? 'Uploading...' : 'Upload PDF' }}
+  
+    </button>
+  
+  </div> -->
+
   <div class="chat__messages" #messageList>
     @if (messages.length === 0 && !loading) {
       <div class="chat__empty">
@@ -36,18 +55,51 @@
   @if (error) {
     <p class="chat__error" role="alert">{{ error }}</p>
   }
+  <input
+  #fileInput
+  type="file"
+  accept=".pdf"
+  hidden
+  (change)="onFileSelected($event)"
+/>
+@if (pdfUploaded) {
 
-  <form class="chat__composer" (ngSubmit)="send()">
-    <label class="sr-only" for="message">Message</label>
-    <textarea
+  <div class="pdf-chip">
+  
+      📄 {{ selectedFile?.name }}
+  
+  </div>
+  
+  }
+
+<form class="chat__composer" (ngSubmit)="send()">
+
+  <button
+    type="button"
+    class="attach-btn"
+    (click)="fileInput.click()">
+
+    +
+
+  </button>
+
+  <textarea
       id="message"
       name="message"
       rows="2"
-      placeholder="Type a message…"
+      placeholder="Ask about your PDF..."
       [(ngModel)]="draft"
       (keydown)="onKeydown($event)"
-      [disabled]="loading"
-    ></textarea>
-    <button type="submit" [disabled]="loading || !draft.trim()">Send</button>
-  </form>
+      [disabled]="loading">
+  </textarea>
+
+  <button
+      type="submit"
+      [disabled]="loading || !draft.trim()">
+
+      Send
+
+  </button>
+
+</form>
 </section>

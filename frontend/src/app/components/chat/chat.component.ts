@@ -15,6 +15,11 @@ export class ChatComponent {
   private readonly chatService = inject(ChatService);
 
   @ViewChild('messageList') messageList?: ElementRef<HTMLDivElement>;
+  selectedFile?: File;
+
+  uploading = false;
+
+  pdfUploaded = false;
 
   messages: ChatMessage[] = [];
   draft = '';
@@ -22,6 +27,15 @@ export class ChatComponent {
   error = '';
 
   send(): void {
+    this.error = '';   // clear any old errors
+
+    if (!this.pdfUploaded) {
+
+      this.error = "Please upload a PDF first.";
+    
+      return;
+    }
+    
     const text = this.draft.trim();
     if (!text || this.loading) {
       return;
@@ -38,7 +52,7 @@ export class ChatComponent {
       next: (response) => {
         this.messages = [
           ...this.messages,
-          { role: 'assistant', content: response.reply },
+          { role: 'assistant', content: response.answer },
         ];
         this.loading = false;
         this.scrollToBottom();
@@ -67,4 +81,86 @@ export class ChatComponent {
       }
     });
   }
+
+  onFileSelected(event: Event): void {
+
+    const input = event.target as HTMLInputElement;
+  
+    if (!input.files?.length) {
+      return;
+    }
+  
+    const file = input.files[0];
+  
+    this.uploading = true;
+  
+    this.chatService.uploadPdf(file).subscribe({
+  
+      next: () => {
+        this.error = '';           // <-- clear previous errors
+
+        this.selectedFile = file;  // <-- you forgot this
+
+        this.uploading = false;
+
+        this.pdfUploaded = true;
+  
+        this.messages.push({
+  
+          role: 'assistant',
+  
+          content: `📄 "${file.name}" uploaded successfully. Ask me anything about it.`
+  
+        });
+  
+      },
+  
+      error: () => {
+  
+        this.uploading = false;
+  
+        this.error = "PDF upload failed.";
+  
+      }
+  
+    });
+  
+  }
+
+  uploadPdf(): void {
+
+    if (!this.selectedFile) {
+      return;
+    }
+  
+    this.uploading = true;
+    this.error = '';
+  
+    this.chatService.uploadPdf(this.selectedFile).subscribe({
+  
+      next: () => {
+  
+        this.uploading = false;
+        this.pdfUploaded = true;
+  
+        this.messages = [
+          {
+            role: 'assistant',
+            content: '✅ PDF uploaded successfully. You can now ask questions.'
+          }
+        ];
+      },
+  
+      error: () => {
+  
+        this.uploading = false;
+  
+        this.error = 'PDF upload failed.';
+      }
+  
+    });
+  
+  }
+
+  
 }

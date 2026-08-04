@@ -12,6 +12,18 @@ export class ChatService {
 
   private readonly http = inject(HttpClient);
 
+  uploadPdf(file: File): Observable<any> {
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    return this.http.post(
+      `${environment.apiUrl}/upload`,
+      formData
+    );
+  }
+
   sendMessage(
     message: string,
     history: ChatMessage[]
@@ -20,8 +32,7 @@ export class ChatService {
     return this.http.post<ChatResponse>(
       `${environment.apiUrl}/chat`,
       {
-        message,
-        history
+        question: message
       }
     );
   }
