@@ -1,8 +1,9 @@
-A simple AI chatbot built using the OpenAI API.
+# A simple AI chatbot built using the OpenAI API.
 
 The project demonstrates the fundamentals of interacting with Large Language Models (LLMs), sending user prompts, receiving model responses, and building a conversational AI experience.
 
-Technologies
+# Technologies
+
 Python
 OpenAI API
 Environment variables
@@ -12,7 +13,9 @@ LLM API integration
 Prompt handling
 API authentication
 User → LLM → Response workflow
-Architecture
+
+# Architecture
+
 User
  │
  ▼
@@ -29,3 +32,4 @@ LLM Response
  │
  ▼
 User
+
