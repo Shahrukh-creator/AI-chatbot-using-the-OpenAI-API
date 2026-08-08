@@ -16,6 +16,7 @@ User → LLM → Response workflow
 
 # Architecture
 
+
 User
  │
  ▼
